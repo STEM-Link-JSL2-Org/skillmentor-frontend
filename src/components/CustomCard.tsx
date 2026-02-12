@@ -1,14 +1,7 @@
 import { useState } from "react";
 import type { CardElement } from "../types";
 import { Button } from "./ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,} from "./ui/card";
 
 function CustomCard({ cardProperties }: { cardProperties: CardElement }) {
   const [counter, setCounter] = useState(0);
@@ -20,12 +13,13 @@ function CustomCard({ cardProperties }: { cardProperties: CardElement }) {
   }
 
   return (
-    <Card className="w-full bg-black text-white">
+    
+    <Card>
       <CardHeader>
         <CardTitle>{cardProperties.title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <CardDescription className="text-white">
+        <CardDescription className="text-black">
           {cardProperties.description}
         </CardDescription>
       </CardContent>
