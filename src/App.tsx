@@ -6,12 +6,13 @@ import Hero from "./components/Hero";
 function App() {
   
   return(
-    <>
+    <div className="overflow-x-hidden">
+    
     <NavBar/>
     <Hero/>
     <CardGroup cardElements={cards} />
 
-    </>
+    </div>
   ) 
 }
 
