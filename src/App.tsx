@@ -1,40 +1,41 @@
-import CardGroup from "@/components/CardGroup";
-import type { CardElement } from "@/types";
+import { BrowserRouter, Routes, Route } from "react-router";
+import Layout from "@/components/Layout";
+import HomePage from "@/pages/HomePage";
+import LoginPage from "@/pages/LoginPage";
+import DashboardPage from "@/pages/DashboardPage";
+import PaymentPage from "@/pages/PaymentPage";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { AuthProvider } from "@/lib/auth-context";
 
 function App() {
-  const cards: CardElement[] = [
-    {
-      title: "AWS Developer Associate Exam Prep",
-      description:
-        "Hi! I'm Michelle. Language lover and tutor of English. I specialize in AWS certification preparation and have helped over 150 students achieve their AWS Developer Associate certification. With my background in cloud computing and software development, I can provide practical insights and real-world examples to help you understand complex concepts. I also offer mock interviews and hands-on coding sessions.",
-    },
-    {
-      title: "AWS DevOps Engineering Proffesional Exam Prep",
-      description:
-        "Hey there! I'm a Senior DevOps Engineer with experience at Fortune 500 companies. I specialize in CI/CD pipelines, container orchestration with Kubernetes, and cloud-native architectures. I've helped hundreds of engineers transition into DevOps roles and master tools like Docker, Jenkins, and GitLab. My sessions include hands-on infrastructure as code exercises and real-world automation scenarios.",
-    },
-    {
-      title: "AWS Developer Associate Exam Prep",
-      description:
-        "Hi! I'm Michelle. Language lover and tutor of English. I specialize in AWS certification preparation and have helped over 150 students achieve their AWS Developer Associate certification. With my background in cloud computing and software development, I can provide practical insights and real-world examples to help you understand complex concepts. I also offer mock interviews and hands-on coding sessions.",
-    },
-    {
-      title: "Sample title",
-      description: "Sample description.",
-    },
-    {
-      title: "AWS Developer Associate Exam Prep",
-      description:
-        "Hi! I'm Michelle. Language lover and tutor of English. I specialize in AWS certification preparation and have helped over 150 students achieve their AWS Developer Associate certification. With my background in cloud computing and software development, I can provide practical insights and real-world examples to help you understand complex concepts. I also offer mock interviews and hands-on coding sessions.",
-    },
-    {
-      title: "AWS DevOps Engineering Proffesional Exam Prep",
-      description:
-        "Hey there! I'm a Senior DevOps Engineer with experience at Fortune 500 companies. I specialize in CI/CD pipelines, container orchestration with Kubernetes, and cloud-native architectures. I've helped hundreds of engineers transition into DevOps roles and master tools like Docker, Jenkins, and GitLab. My sessions include hands-on infrastructure as code exercises and real-world automation scenarios.",
-    },
-  ];
-
-  return <CardGroup cardElements={cards} />;
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <DashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/payment/:sessionId"
+              element={
+                <ProtectedRoute>
+                  <PaymentPage />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
 export default App;
