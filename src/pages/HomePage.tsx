@@ -1,11 +1,22 @@
+import { useEffect, useState } from "react";
 import { MentorCard } from "@/components/MentorCard";
-import { MOCK_MENTORS } from "@/lib/mockData";
+import { getPublicMentors } from "@/lib/api";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/clerk-react";
+import type { Mentor } from "@/types";
 
 export default function HomePage() {
   const { isSignedIn } = useAuth();
+  const [mentors, setMentors] = useState<Mentor[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getPublicMentors()
+      .then((data) => setMentors(data.content))
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <div className="py-10">
@@ -41,11 +52,21 @@ export default function HomePage() {
           Schedule a Call
         </h1>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {MOCK_MENTORS.map((mentor) => (
-            <MentorCard key={mentor.id} mentor={mentor} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="text-center py-10 text-muted-foreground">
+            Loading mentors...
+          </div>
+        ) : mentors.length === 0 ? (
+          <div className="text-center py-10 text-muted-foreground">
+            No mentors available yet.
+          </div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {mentors.map((mentor) => (
+              <MentorCard key={mentor.id} mentor={mentor} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

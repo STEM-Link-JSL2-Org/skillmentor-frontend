@@ -24,8 +24,12 @@ export function MentorCard({ mentor }: MentorCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const { isSignedIn } = useAuth();
 
-  // Use a simple threshold to decide if the bio is long enough
-  const bioTooLong = mentor.description.length > 200;
+  const mentorName = `${mentor.firstName} ${mentor.lastName}`;
+  const hasSubjects = mentor.subjects.length > 0;
+  const courseTitle = mentor.subjects[0]?.subjectName ?? "";
+  const courseImageUrl = mentor.subjects[0]?.courseImageUrl ?? "";
+  const bio = mentor.bio ?? "";
+  const bioTooLong = bio.length > 200;
 
   const handleSchedule = () => {
     if (!isSignedIn) {
@@ -41,7 +45,7 @@ export function MentorCard({ mentor }: MentorCardProps) {
         <div className="p-6 flex-1 flex flex-col">
           <div className="flex justify-between items-start mb-4">
             <div className="space-y-2">
-              <h3 className="font-semibold text-xl">{mentor.courseTitle}</h3>
+              <h3 className="font-semibold text-xl">{courseTitle}</h3>
               <div className="flex items-center space-x-2">
                 <ThumbsUp className="size-6" />
                 <p className="text-sm text-muted-foreground">
@@ -49,16 +53,22 @@ export function MentorCard({ mentor }: MentorCardProps) {
                 </p>
               </div>
               <div className="flex items-center space-x-2">
-                <img
-                  src={mentor.mentorImageUrl}
-                  alt={mentor.mentorName}
-                  className="size-6 object-cover object-top rounded-full"
-                />
-                <span className="text-sm">{mentor.mentorName}</span>
+                {mentor.profileImageUrl ? (
+                  <img
+                    src={mentor.profileImageUrl}
+                    alt={mentorName}
+                    className="size-6 object-cover object-top rounded-full"
+                  />
+                ) : (
+                  <div className="size-6 rounded-full bg-muted flex items-center justify-center text-xs font-bold">
+                    {mentor.firstName.charAt(0)}
+                  </div>
+                )}
+                <span className="text-sm">{mentorName}</span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Building2 className="size-6" />
-                <span>{mentor.mentorCompany}</span>
+                <span>{mentor.company}</span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Calendar className="size-6" />
@@ -66,16 +76,16 @@ export function MentorCard({ mentor }: MentorCardProps) {
               </div>
             </div>
             <div className="w-36">
-              {mentor.courseImageUrl ? (
+              {courseImageUrl ? (
                 <img
-                  src={mentor.courseImageUrl}
-                  alt={mentor.courseTitle}
+                  src={courseImageUrl}
+                  alt={courseTitle}
                   className="size-20 object-cover"
                 />
               ) : (
                 <div className="size-20 bg-muted flex items-center justify-center">
                   <span className="text-2xl font-semibold">
-                    {mentor.courseTitle.charAt(0)}
+                    {courseTitle.charAt(0)}
                   </span>
                 </div>
               )}
@@ -90,7 +100,7 @@ export function MentorCard({ mentor }: MentorCardProps) {
                   !isExpanded && bioTooLong ? "line-clamp-3" : "",
                 )}
               >
-                {mentor.description}
+                {bio}
               </p>
               {bioTooLong && (
                 <button
@@ -109,7 +119,7 @@ export function MentorCard({ mentor }: MentorCardProps) {
               <div className="flex items-center space-x-2">
                 <GraduationCap className="w-4 h-4" />
                 <span className="text-sm">
-                  {mentor.enrollments} Enrollments
+                  {mentor.totalEnrollments} Enrollments
                 </span>
               </div>
 
@@ -127,8 +137,10 @@ export function MentorCard({ mentor }: MentorCardProps) {
           <Button
             onClick={handleSchedule}
             className="w-full bg-black text-white hover:bg-black/90"
+            disabled={!hasSubjects}
+            title={!hasSubjects ? "No courses available for this mentor yet" : undefined}
           >
-            Schedule a session
+            {hasSubjects ? "Schedule a session" : "No courses available"}
           </Button>
         </div>
       </Card>
